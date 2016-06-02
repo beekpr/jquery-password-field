@@ -1,0 +1,25 @@
+{
+  "name": "jquery-password-field",
+  "homepage": "https://github.com/beekpr/jquery-password-field",
+  "description": "JQuery Plugin to customize password field",
+  "main": [
+    "jquery.password_field.js",
+    "jquery.password_field.sass"
+  ],
+  "keywords": [
+    "jquery",
+    "password"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">=1.4"
+  }
+}
