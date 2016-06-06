@@ -7,72 +7,74 @@
  */
 (function ($) {
 
-    $.fn.passwordToggle = function () {
+    var counter = 0;
 
-        var docFrag = document.createDocumentFragment();
-        var random = [Math.floor(Math.random() * 9999)];
-        var randomCheckBoxId = 'data-psswrd-id-' + random;
+    /**
+     * Adds a visibility toggle to the password field.
+     */
+    $.fn.visibilityToggle = function (options) {
 
-        var passwordElem = this[0];
-        passwordElem.classList.add('visiblity-toggle');
-        if (passwordElem === undefined) {
-            return;
-        }
-        var textInputElem = passwordElem.cloneNode();
-        textInputElem.type = 'text';
-        textInputElem.setAttribute('style', 'display:none;');
+        var settings = $.extend({
+            labelClasses: 'fa',
+            showLabelClasses: 'fa-eye',
+            hideLabelClasses: 'fa-eye-slash',
+            enableTooltip: options != undefined && options.tooltip != undefined,
+            tooltip: 'Click to make password visible'
+        }, options);
 
+        this.each(function() {
+            var checkBoxId = 'password-toggle-id-' + counter;
+            counter++;
+            var $this = $(this);
+            $this.addClass('visibility-toggle');
 
-        var wrapperElement = document.createElement('span');
-        wrapperElement.className = 'visiblity-toggle-wrapper';
+            var $textInput = $this.clone();
+            $textInput.attr('type', 'text');
+            $textInput.attr('autocomplete', 'off');
+            $textInput.hide();
 
-        var toggleElem = document.createElement('input');
-        toggleElem.id = randomCheckBoxId;
-        toggleElem.type = 'checkbox';
-        toggleElem.setAttribute('data-psswrd-checkbox', '');
+            var $toggleWrapper = $('<span class="visiblity-toggle-wrapper">');
 
-        var toggleLableElem = document.createElement('label');
-        toggleLableElem.setAttribute('for', randomCheckBoxId);
-        toggleLableElem.className = 'fa fa-eye';
-        toggleLableElem.setAttribute('aria-hidden', 'true');
-        toggleLableElem.setAttribute('data-psswrd-text', '');
+            var $toggle = $('<input type="checkbox">');
+            $toggle.attr('id', checkBoxId);
 
-        wrapperElement.appendChild(toggleElem);
-        wrapperElement.appendChild(toggleLableElem);
+            var $toggleLabel = $('<label>');
+            $toggleLabel.attr('for', checkBoxId);
+            $toggleLabel.addClass(settings.labelClasses);
+            $toggleLabel.addClass(settings.showLabelClasses)
+            $toggleLabel.attr('aria-hidden', 'true');
 
-        docFrag.appendChild(textInputElem);
-        docFrag.appendChild(wrapperElement);
-
-        //Puts the new elements after the password element
-        if (passwordElem.nextSibling) {
-            passwordElem.parentNode.insertBefore(docFrag, passwordElem.nextSibling);
-        } else {
-            passwordElem.parentNode.appendChild(docFrag);
-        }
-
-
-        toggleElem.addEventListener('click', function () {
-            if (toggleElem.checked) {
-                passwordElem.style.display = 'none';
-                textInputElem.style.display = 'inherit';
-                toggleLableElem.className = 'fa fa-eye-slash';
-            } else {
-                passwordElem.style.display = 'inherit';
-                textInputElem.style.display = 'none';
-                toggleLableElem.className = 'fa fa-eye'
+            if (settings.enableTooltip) {
+                $toggleLabel.attr('title', settings.tooltip);
+                if (typeof $toggleLabel.tooltip === 'function') {
+                    $toggleLabel.tooltip();
+                }
             }
+
+            $toggleWrapper.append($toggle, $toggleLabel);
+
+            var $fragment = $(document.createDocumentFragment());
+            $fragment.append($textInput, $toggleWrapper);
+
+            $fragment.insertAfter($this);
+
+            $toggle.click(function () {
+                var checked = $(this).is(':checked');
+                $this.toggle(!checked);
+                $textInput.toggle(checked);
+                $toggleLabel.toggleClass(settings.hideLabelClasses, checked);
+                $toggleLabel.toggleClass(settings.showLabelClasses, !checked);
+            });
+
+            $this.change(function() {
+                $textInput.val($this.val());
+            });
+
+            $textInput.change(function() {
+                $this.val($textInput.val());
+            });
+
         });
-
-        passwordElem.addEventListener('change', function () {
-            textInputElem.value = passwordElem.value;
-        });
-
-        textInputElem.addEventListener('change', function () {
-            passwordElem.value = textInputElem.value;
-        });
-
-
     }
-
 
 }(jQuery));
