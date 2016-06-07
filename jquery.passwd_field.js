@@ -27,11 +27,7 @@
             counter++;
             var $this = $(this);
             $this.addClass('visibility-toggle');
-
-            var $textInput = $this.clone();
-            $textInput.attr('type', 'text');
-            $textInput.attr('autocomplete', 'off');
-            $textInput.hide();
+            $this.attr('autocomplete', 'off');
 
             var $toggleWrapper = $('<span class="visiblity-toggle-wrapper">');
 
@@ -54,24 +50,17 @@
             $toggleWrapper.append($toggle, $toggleLabel);
 
             var $fragment = $(document.createDocumentFragment());
-            $fragment.append($textInput, $toggleWrapper);
+            $fragment.append($toggleWrapper);
 
             $fragment.insertAfter($this);
 
             $toggle.click(function () {
                 var checked = $(this).is(':checked');
-                $this.toggle(!checked);
-                $textInput.toggle(checked);
+                var focus = $(this).is(':focus');
+                $this.attr('type', checked ? 'text' : 'password');
+                $this.focus();
                 $toggleLabel.toggleClass(settings.hideLabelClasses, checked);
                 $toggleLabel.toggleClass(settings.showLabelClasses, !checked);
-            });
-
-            $this.change(function() {
-                $textInput.val($this.val());
-            });
-
-            $textInput.change(function() {
-                $this.val($textInput.val());
             });
 
         });
