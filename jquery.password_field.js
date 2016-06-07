@@ -19,7 +19,7 @@
             showLabelClasses: 'fa-eye',
             hideLabelClasses: 'fa-eye-slash',
             enableTooltip: options != undefined && options.tooltip != undefined,
-            tooltip: 'Click to make password visible'
+            tooltip: 'Toggle password visibility'
         }, options);
 
         this.each(function() {
