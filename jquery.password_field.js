@@ -5,7 +5,36 @@
  * by creating a another (text) input field. And switches
  * between the password and the text input fields.
  */
-(function ($) {
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery', 'zxcvbn'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node/CommonJS
+        module.exports = function( root, jQuery ) {
+            if ( jQuery === undefined ) {
+                // require('jQuery') returns a factory that requires window to
+                // build a jQuery instance, we normalize how we use modules
+                // that require this pattern but the window provided is a noop
+                // if it's defined (how jquery works)
+                if ( typeof window !== 'undefined' ) {
+                    jQuery = require('jquery');
+                    zxcvbn = require('zxcvbn');
+                }
+                else {
+                    jQuery = require('jquery')(root);
+                    zxcvbn = require('zxcvbn')(root);
+
+                }
+            }
+            factory(jQuery, zxcvbn);
+            return jQuery;
+        };
+    } else {
+        // Browser globals
+        factory(jQuery, window.zxcvbn);
+    }
+}(function ($, zxcvbn) {
 
     var counter = 0;
 
@@ -153,4 +182,4 @@
             });
         })
     }
-}(jQuery));
+}));
