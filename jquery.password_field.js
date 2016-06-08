@@ -60,14 +60,14 @@
 
             var $toggleWrapper = $('<span class="visiblity-toggle-wrapper">');
 
-            var $toggle = $('<input type="checkbox">');
-            $toggle.attr('id', checkBoxId);
+            var $toggle = $('<input type="checkbox">')
+                .attr('id', checkBoxId);
 
-            var $toggleLabel = $('<label>');
-            $toggleLabel.attr('for', checkBoxId);
-            $toggleLabel.addClass(settings.labelClasses);
-            $toggleLabel.addClass(settings.showLabelClasses)
-            $toggleLabel.attr('aria-hidden', 'true');
+            var $toggleLabel = $('<label>')
+                .attr('for', checkBoxId)
+                .addClass(settings.labelClasses)
+                .addClass(settings.showLabelClasses)
+                .attr('aria-hidden', 'true');
 
             if (settings.enableTooltip) {
                 $toggleLabel.attr('title', settings.tooltip);
@@ -78,10 +78,7 @@
 
             $toggleWrapper.append($toggle, $toggleLabel);
 
-            var $fragment = $(document.createDocumentFragment());
-            $fragment.append($toggleWrapper);
-
-            $fragment.insertAfter($this);
+            $toggleWrappert.insertAfter($this);
 
             $toggle.click(function () {
                 var checked = $(this).is(':checked');
@@ -94,7 +91,7 @@
 
         });
 
-    }
+    };
 
     $.fn.strengthIndicator = function(options) {
 
@@ -137,9 +134,7 @@
 
             $fragment.insertAfter($this);
 
-
             $this.on('input', function(event) {
-
 
                 var password = $this.val();
 
@@ -153,9 +148,7 @@
 
                 var result = zxcvbn(password);
 
-                console.log(result.score);
-
-                var strength = null;
+                var strength = 'na';
                 if (password) {
                     switch (result.score) {
                         case 4:
@@ -173,13 +166,11 @@
                         default:
                             strength = 'week';
                     }
-                } else {
-                    strength = 'na';
                 }
 
                 $fragment.find('.password-strength').attr('data-strength', strength);
                 $fragment.find('.password-strength-text').html(settings.strength[strength]);
             });
-        })
-    }
+        });
+    };
 }));

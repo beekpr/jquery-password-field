@@ -1,0 +1,20 @@
+{
+  "name": "jquery-password-field",
+  "version": "1.0.0",
+  "description": "JQuery Plugin to customize password field",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beekpr/jquery-password-field.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beekpr/jquery-password-field/issues"
+  },
+  "homepage": "https://github.com/beekpr/jquery-password-field#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-bower-task": "^0.4.0",
+    "grunt-contrib-uglify": "^1.0.1"
+  }
+}
