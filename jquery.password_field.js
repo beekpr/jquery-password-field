@@ -78,7 +78,7 @@
 
             $toggleWrapper.append($toggle, $toggleLabel);
 
-            $toggleWrappert.insertAfter($this);
+            $toggleWrapper.insertAfter($this);
 
             $toggle.click(function () {
                 var checked = $(this).is(':checked');
