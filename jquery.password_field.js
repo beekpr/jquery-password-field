@@ -44,20 +44,20 @@
      *
      * <b>Visibility toggle</b>
      *
-     * Visibility toggle can be turned on by providing <tt>toggle</tt> value in the options.
+     * Visibility toggle can be turned on by providing <tt>visibilityToggle</tt> value in the options.
      * <tt>toggle</tt> can be either a <i>Boolean</i> or an toggle options <i>Object</i>.
      *
      * Eg:
      * <code><pre>
      * {
-     *   toggle: true
+     *   visibilityToggle: true
      * }
      * </pre></code>
      *
      * Eg:
      * <code><pre>
      * {
-     *   toggle: {
+     *   visibilityToggle: {
      *     enableTooltip: true
      *   }
      * }
@@ -65,7 +65,7 @@
      *
      * <b>Strength indicator</b>
      *
-     * Strenght indicator can be added to the password field by using <tt>strength</tt> value in the options.
+     * Strenght indicator can be added to the password field by using <tt>strengthIndicator</tt> value in the options.
      *
      *
      *
@@ -73,16 +73,31 @@
      */
     $.fn.passwordField = function(options) {
 
-        if (options && options.strength) {
-            $(this).strengthIndicator(typeof options.strength == 'object' ? options.strength : {});
+        if (options && options.strengthIndicator) {
+            $(this).strengthIndicator(typeof options.strengthIndicator == 'object' ? options.strengthIndicator : {});
         }
-        if (options && options.toggle) {
-            $(this).visibilityToggle(typeof options.toggle == 'object' ? options.toggle : {});
+        if (options && options.visibilityToggle) {
+            $(this).visibilityToggle(typeof options.visibilityToggle == 'object' ? options.visibilityToggle : {});
         }
     };
 
     /**
      * Adds a visibility toggle to the password field.
+     *
+     * Options:
+     * - labelClasses - String - space separated list of css classes
+     *                  attached to the toggle (label).
+     *                  Default: fa (font-awesome)
+     * - showLabelClasses - String - space separated list of css classes
+     *                      attached to the toggle (label) when password is hidden.
+     *                      Default: fa-eye (font-awesome eye icon)
+     * - hideLabelClasses - String - space separated list of css classes
+     *                      attached to the toggle (label) when password is displayed.
+     *                      Default: fa-eye-slash (font-awesome slashed eye icon)
+     * - enableTooltip - Boolean - Enables tooltip message on toggle (label)
+     *                   Default: if <tt>tooltip</tt> option is provided, it is <tt>true</tt>
+     *                   otherwise <tt>false</tt>
+     * - tooltip - String - Tooltip message displayed on toggle (label) when mouse is over.
      */
     $.fn.visibilityToggle = function(options) {
 
@@ -136,10 +151,38 @@
 
     };
 
+    /**
+     * Adds a strength indicator under the password field.
+     * The indicator has two parts:
+     * - a strength indicator base on <a href="https://github.com/dropbox/zxcvbn">zxcvbn</a> library.
+     * - a validator based on password rules: > 8 chars, upper and lowercase chars, at lease on digit
+     *
+     * In the options the displayed texts can be controlled.
+     *
+     * Example:
+     * <code><pre>
+     * {
+     *   strength_text: {
+     *     weak: 'Weak',
+     *     okay: 'Okay',
+     *     medium: 'Medium',
+     *     good: 'Good',
+     *     strong: 'Strong',
+     *     na: ''
+     *   },
+     *   validity: {
+     *     header: 'Your password must have',
+     *     pwd_length: '8 or more characters',
+     *     pwd_upper_and_lower: 'Upper & lowercase letters',
+     *     pwd_digits: 'At least one number'
+     *   }
+     * }
+     * </pre></code>
+     */
     $.fn.strengthIndicator = function(options) {
 
         var settings = $.extend({
-            text: {
+            strength: {
                 weak: 'Weak',
                 okay: 'Okay',
                 medium: 'Medium',
@@ -212,7 +255,7 @@
                 }
 
                 $fragment.find('.password-strength').attr('data-strength', strength);
-                $fragment.find('.password-strength-text').html(settings.text[strength]);
+                $fragment.find('.password-strength-text').html(settings.strength[strength]);
             });
         });
     };
