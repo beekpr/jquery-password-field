@@ -185,11 +185,9 @@
      */
     $.fn.strengthIndicator = function(options) {
 
-        var settings = $.extend({
+        var settings = $.extend(true, {
             strength: {
-                weak: 'Weak',
-                okay: 'Okay',
-                medium: 'Medium',
+                invalid: 'Invalid',
                 good: 'Good',
                 strong: 'Strong',
                 na: ''
@@ -207,13 +205,11 @@
 
             var $fragment = $('<div><div class="password-strength"> \
                     <ul class="password-strength-indicator"> \
-                        <li class="strong good medium okay weak"></li> \
-                        <li class="strong good medium okay"></li> \
-                        <li class="strong good medium"></li> \
-                        <li class="strong good"></li> \
+                        <li class="invalid"></li> \
+                        <li class="good"></li> \
                         <li class="strong"></li> \
                     </ul> \
-                    <div class="password-strength-text"><span></span></div> \
+                    <div class="password-strength-text"><span><span></span>&nbsp;<i class="help fa fa-question-circle" aria-hidden="true"></i></span></div> \
                 </div> \
                 <div class="password-validity-header">' + settings.validity['header'] + '</div> \
                 <ul class="password-validity"> \
@@ -223,6 +219,10 @@
                 </ul></div>');
 
             $fragment.insertAfter($this);
+
+            $fragment.find('.password-strength-text').click(function() {
+                $fragment.find('.password-validity').toggleClass('show-on-mobile');
+            });
 
             $this.on('input', function(event) {
 
@@ -236,30 +236,28 @@
                 $fragment.find('.password-validity .upper-and-lower').toggleClass('valid', hasLower && hasUpper);
                 $fragment.find('.password-validity .length').toggleClass('valid', password.length >= 8);
 
+                var valid = hasDigit && hasLower && hasUpper && password.length >= 8;
+
                 var result = zxcvbn(password);
 
                 var strength = 'na';
                 if (password) {
                     switch (result.score) {
                         case 4:
+                        case 3:
                             strength = 'strong';
                             break;
-                        case 3:
-                            strength = 'good';
-                            break;
-                        case 2:
-                            strength = 'medium';
-                            break;
-                        case 1:
-                            strength = 'okay';
-                            break;
                         default:
-                            strength = 'weak';
+                            strength = 'good';
+                    }
+
+                    if (!valid) {
+                        strength = 'invalid';
                     }
                 }
 
                 $fragment.find('.password-strength').attr('data-strength', strength);
-                $fragment.find('.password-strength-text').html(settings.strength[strength]);
+                $fragment.find('.password-strength-text span span').text(settings.strength[strength]);
             });
         });
     };
