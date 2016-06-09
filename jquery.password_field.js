@@ -1,9 +1,13 @@
 /*
- * Password Visibility Toggle JQuery Plugin
+ * Password Visibility Toggle & Strength indicator JQuery Plugin
  *
- * Adds password visibility toggle to a password field,
- * by creating a another (text) input field. And switches
+ * Visibility Toggle: Adds password visibility toggle to a password
+ * field, by creating a another (text) input field. And switches
  * between the password and the text input fields.
+ *
+ * Strength Indicator: Adds a bar under the password field indicating
+ * the strength of the provided password. Also adds a password
+ * validity check list (>8 chars, upper and lowercase chars, >1 digit)
  */
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
