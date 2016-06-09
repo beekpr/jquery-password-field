@@ -38,10 +38,53 @@
 
     var counter = 0;
 
+
+    /**
+     * Adds features to a password field.
+     *
+     * <b>Visibility toggle</b>
+     *
+     * Visibility toggle can be turned on by providing <tt>toggle</tt> value in the options.
+     * <tt>toggle</tt> can be either a <i>Boolean</i> or an toggle options <i>Object</i>.
+     *
+     * Eg:
+     * <code><pre>
+     * {
+     *   toggle: true
+     * }
+     * </pre></code>
+     *
+     * Eg:
+     * <code><pre>
+     * {
+     *   toggle: {
+     *     enableTooltip: true
+     *   }
+     * }
+     * </pre></code>
+     *
+     * <b>Strength indicator</b>
+     *
+     * Strenght indicator can be added to the password field by using <tt>strength</tt> value in the options.
+     *
+     *
+     *
+     * @param options
+     */
+    $.fn.passwordField = function(options) {
+
+        if (options && options.strength) {
+            $(this).strengthIndicator(typeof options.strength == 'object' ? options.strength : {});
+        }
+        if (options && options.toggle) {
+            $(this).visibilityToggle(typeof options.toggle == 'object' ? options.toggle : {});
+        }
+    };
+
     /**
      * Adds a visibility toggle to the password field.
      */
-    $.fn.visibilityToggle = function (options) {
+    $.fn.visibilityToggle = function(options) {
 
         var settings = $.extend({
             labelClasses: 'fa',
@@ -96,10 +139,10 @@
     $.fn.strengthIndicator = function(options) {
 
         var settings = $.extend({
-            strength: {
-                week: 'Week',
-                soso: 'So-so',
+            text: {
+                weak: 'Weak',
                 okay: 'Okay',
+                medium: 'Medium',
                 good: 'Good',
                 strong: 'Strong',
                 na: ''
@@ -117,9 +160,9 @@
 
             var $fragment = $('<div><div class="password-strength"> \
                     <ul class="password-strength-indicator"> \
-                        <li class="strong good okay so-so week"></li> \
-                        <li class="strong good okay so-so"></li> \
-                        <li class="strong good okay"></li> \
+                        <li class="strong good medium okay weak"></li> \
+                        <li class="strong good medium okay"></li> \
+                        <li class="strong good medium"></li> \
                         <li class="strong good"></li> \
                         <li class="strong"></li> \
                     </ul> \
@@ -158,18 +201,18 @@
                             strength = 'good';
                             break;
                         case 2:
-                            strength = 'okay';
+                            strength = 'medium';
                             break;
                         case 1:
-                            strength = 'soso';
+                            strength = 'okay';
                             break;
                         default:
-                            strength = 'week';
+                            strength = 'weak';
                     }
                 }
 
                 $fragment.find('.password-strength').attr('data-strength', strength);
-                $fragment.find('.password-strength-text').html(settings.strength[strength]);
+                $fragment.find('.password-strength-text').html(settings.text[strength]);
             });
         });
     };
