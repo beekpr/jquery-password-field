@@ -221,11 +221,11 @@
                             <li class="good"></li> \
                             <li class="strong"></li> \
                         </ul> \
-                        <div class="password-strength-text"><span>\
-                            <span></span>&nbsp;\
+                        <div class="password-strength-text-wrapper"><span>\
+                            <span class="password-strength-text"></span>&nbsp;\
                             <i class="help ' + settings.helpIconClasses + '" aria-hidden="true"></i>\
-                        </span></div> \
-                    </div> \
+                        </span></div>\
+                    </div>\
                     <div class="password-validity-header">' + settings.validity['header'] + '</div> \
                     <ul class="password-validity"> \
                         <li class="length">' + settings.validity['passwordLength'] + '</li> \
@@ -238,7 +238,7 @@
 
             //The password validity only displayed on mobile
             //when the user clicks on the password strength text.
-            $fragment.find('.password-strength-text').click(function() {
+            $fragment.find('.password-strength-text-wrapper > span').click(function() {
                 $fragment.find('.password-validity').toggleClass('show-on-mobile');
             });
 
@@ -273,7 +273,7 @@
                 $fragment.find('.password-validity .upper-and-lower').toggleClass('valid', hasLower && hasUpper);
                 $fragment.find('.password-validity .length').toggleClass('valid', isLongEnough);
                 $fragment.find('.password-strength').attr('data-strength', strength);
-                $fragment.find('.password-strength-text span span').text(settings.strength[strength]);
+                $fragment.find('.password-strength-text').text(settings.strength[strength]);
             });
         });
     };
