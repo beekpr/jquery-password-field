@@ -69,9 +69,7 @@
      *
      * <b>Strength indicator</b>
      *
-     * Strenght indicator can be added to the password field by using <tt>strengthIndicator</tt> value in the options.
-     *
-     *
+     * Strength indicator can be added to the password field by using <tt>strengthIndicator</tt> value in the options.
      *
      * @param options
      */
@@ -194,68 +192,86 @@
             },
             validity: {
                 header: 'Your password must have',
-                pwd_length: '8 or more characters',
-                pwd_upper_and_lower: 'Upper & lowercase letters',
-                pwd_digits: 'At least one number'
-            }
+                passwordLength: '8 or more characters',
+                passwordUpperAndLower: 'Upper & lowercase letters',
+                passwordDigits: 'At least one number'
+            },
+            helpIconClasses: 'fa fa-question-circle'
         }, options);
+
+        function isLowerCase(ch) {
+            return ch == ch.toLowerCase() && ch != ch.toUpperCase();
+        }
+
+        function isUpperCase(ch) {
+            return ch == ch.toUpperCase() && ch != ch.toLowerCase();
+        }
+
+        function isDigit(ch) {
+            return /\d/.test(ch);
+        }
 
         this.each(function () {
             var $this = $(this);
 
-            var $fragment = $('<div><div class="password-strength"> \
-                    <ul class="password-strength-indicator"> \
-                        <li class="invalid"></li> \
-                        <li class="good"></li> \
-                        <li class="strong"></li> \
-                    </ul> \
-                    <div class="password-strength-text"><span><span></span>&nbsp;<i class="help fa fa-question-circle" aria-hidden="true"></i></span></div> \
-                </div> \
-                <div class="password-validity-header">' + settings.validity['header'] + '</div> \
-                <ul class="password-validity"> \
-                    <li class="length">' + settings.validity['pwd_length'] + '</li> \
-                    <li class="upper-and-lower">' + settings.validity['pwd_upper_and_lower'] + '</li> \
-                    <li class="digits">' + settings.validity['pwd_digits'] + '</li> \
-                </ul></div>');
+            var $fragment = $('<div>\
+                    <div class="password-strength"> \
+                        <ul class="password-strength-indicator"> \
+                            <li class="invalid"></li> \
+                            <li class="good"></li> \
+                            <li class="strong"></li> \
+                        </ul> \
+                        <div class="password-strength-text"><span>\
+                            <span></span>&nbsp;\
+                            <i class="help ' + settings.helpIconClasses + '" aria-hidden="true"></i>\
+                        </span></div> \
+                    </div> \
+                    <div class="password-validity-header">' + settings.validity['header'] + '</div> \
+                    <ul class="password-validity"> \
+                        <li class="length">' + settings.validity['passwordLength'] + '</li> \
+                        <li class="upper-and-lower">' + settings.validity['passwordUpperAndLower'] + '</li> \
+                        <li class="digits">' + settings.validity['passwordDigits'] + '</li> \
+                    </ul>\
+                </div>');
 
             $fragment.insertAfter($this);
 
+            //The password validity only displayed on mobile
+            //when the user clicks on the password strength text.
             $fragment.find('.password-strength-text').click(function() {
                 $fragment.find('.password-validity').toggleClass('show-on-mobile');
             });
 
-            $this.on('input', function(event) {
+            $this.on('keyup', function(event) {
 
                 var password = $this.val();
 
-                var hasDigit = /\d/.test(password);
-                var hasLower = /[a-z]/.test(password);
-                var hasUpper = /[A-Z]/.test(password);
+                var hasDigit = false;
+                var hasLower = false;
+                var hasUpper = false;
+                for (var i = 0; i < password.length; i++) {
+                    var ch = password.charAt(i);
+                    hasDigit = hasDigit || isDigit(ch);
+                    hasLower = hasLower || isLowerCase(ch);
+                    hasUpper = hasUpper || isUpperCase(ch);
+                }
+                var isLongEnough = password.length >= 8;
 
-                $fragment.find('.password-validity .digits').toggleClass('valid', hasDigit);
-                $fragment.find('.password-validity .upper-and-lower').toggleClass('valid', hasLower && hasUpper);
-                $fragment.find('.password-validity .length').toggleClass('valid', password.length >= 8);
-
-                var valid = hasDigit && hasLower && hasUpper && password.length >= 8;
-
-                var result = zxcvbn(password);
+                var valid = hasDigit && hasLower && hasUpper && isLongEnough;
 
                 var strength = 'na';
                 if (password) {
-                    switch (result.score) {
-                        case 4:
-                        case 3:
-                            strength = 'strong';
-                            break;
-                        default:
-                            strength = 'good';
-                    }
-
                     if (!valid) {
                         strength = 'invalid';
+                    } else {
+                        var result = zxcvbn(password);
+                        strength = result.score >= 3 ? 'strong' : 'good';
                     }
                 }
 
+                $fragment.find('.password-validity .digits').toggleClass('valid', hasDigit);
+                $fragment.find('.password-validity .upper-and-lower').toggleClass('valid', hasLower && hasUpper);
+                $fragment.find('.password-validity .length').toggleClass('valid', isLongEnough);
                 $fragment.find('.password-strength').attr('data-strength', strength);
                 $fragment.find('.password-strength-text span span').text(settings.strength[strength]);
             });
