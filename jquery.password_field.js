@@ -168,7 +168,7 @@
      *     weak: 'Weak',
      *     okay: 'Okay',
      *     medium: 'Medium',
-     *     good: 'Good',
+     *     acceptable: 'Acceptable',
      *     strong: 'Strong',
      *     na: ''
      *   },
@@ -186,7 +186,7 @@
         var settings = $.extend(true, {
             strength: {
                 invalid: 'Invalid',
-                good: 'Acceptable',
+                acceptable: 'Acceptable',
                 strong: 'Strong',
                 na: ''
             },
@@ -219,7 +219,7 @@
                     <div class="password-strength"> \
                         <ul class="password-strength-indicator"> \
                             <li class="invalid"></li> \
-                            <li class="good"></li> \
+                            <li class="acceptable"></li> \
                             <li class="strong"></li> \
                         </ul> \
                         <div class="password-strength-text-wrapper"><span>\
@@ -263,7 +263,7 @@
                         strength = 'invalid';
                     } else {
                         var result = zxcvbn(password);
-                        strength = result.score >= 3 ? 'strong' : 'good';
+                        strength = result.score >= 3 ? 'strong' : 'acceptable';
                     }
                 }
 
