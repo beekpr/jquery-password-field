@@ -186,7 +186,7 @@
         var settings = $.extend(true, {
             strength: {
                 invalid: 'Invalid',
-                good: 'Good',
+                good: 'Acceptable',
                 strong: 'Strong',
                 na: ''
             },
@@ -196,6 +196,7 @@
                 passwordUpperAndLower: 'Upper & lowercase letters',
                 passwordDigits: 'At least one number'
             },
+            emptyState: 'empty',
             helpIconClasses: 'fa fa-question-circle'
         }, options);
 
@@ -242,10 +243,7 @@
                 $fragment.find('.password-validity').toggleClass('show-on-mobile');
             });
 
-            $this.on('keyup', function(event) {
-
-                var password = $this.val();
-
+            function update_dom(password) {
                 var hasDigit = false;
                 var hasLower = false;
                 var hasUpper = false;
@@ -269,12 +267,21 @@
                     }
                 }
 
+                $fragment.find('.password-validity li').toggleClass(settings.emptyState, password.length == 0);
+                $fragment.find('.password-validity li').toggleClass('invalid', password.length > 0 && !valid);
                 $fragment.find('.password-validity .digits').toggleClass('valid', hasDigit);
                 $fragment.find('.password-validity .upper-and-lower').toggleClass('valid', hasLower && hasUpper);
                 $fragment.find('.password-validity .length').toggleClass('valid', isLongEnough);
                 $fragment.find('.password-strength').attr('data-strength', strength);
                 $fragment.find('.password-strength-text').text(settings.strength[strength]);
+            }
+
+            $this.on('keyup', function(event) {
+                var password = $this.val();
+                update_dom(password);
             });
+
+            update_dom($this.val());
         });
     };
 }));
