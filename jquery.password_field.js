@@ -168,7 +168,7 @@
      *     weak: 'Weak',
      *     okay: 'Okay',
      *     medium: 'Medium',
-     *     good: 'Good',
+     *     acceptable: 'Acceptable',
      *     strong: 'Strong',
      *     na: ''
      *   },
@@ -186,7 +186,7 @@
         var settings = $.extend(true, {
             strength: {
                 invalid: 'Invalid',
-                good: 'Good',
+                acceptable: 'Acceptable',
                 strong: 'Strong',
                 na: ''
             },
@@ -196,6 +196,7 @@
                 passwordUpperAndLower: 'Upper & lowercase letters',
                 passwordDigits: 'At least one number'
             },
+            emptyState: 'empty',
             helpIconClasses: 'fa fa-question-circle'
         }, options);
 
@@ -218,7 +219,7 @@
                     <div class="password-strength"> \
                         <ul class="password-strength-indicator"> \
                             <li class="invalid"></li> \
-                            <li class="good"></li> \
+                            <li class="acceptable"></li> \
                             <li class="strong"></li> \
                         </ul> \
                         <div class="password-strength-text-wrapper"><span>\
@@ -242,10 +243,7 @@
                 $fragment.find('.password-validity').toggleClass('show-on-mobile');
             });
 
-            $this.on('keyup', function(event) {
-
-                var password = $this.val();
-
+            function update_dom(password) {
                 var hasDigit = false;
                 var hasLower = false;
                 var hasUpper = false;
@@ -265,16 +263,25 @@
                         strength = 'invalid';
                     } else {
                         var result = zxcvbn(password);
-                        strength = result.score >= 3 ? 'strong' : 'good';
+                        strength = result.score >= 3 ? 'strong' : 'acceptable';
                     }
                 }
 
+                $fragment.find('.password-validity li').toggleClass(settings.emptyState, password.length == 0);
+                $fragment.find('.password-validity li').toggleClass('invalid', password.length > 0 && !valid);
                 $fragment.find('.password-validity .digits').toggleClass('valid', hasDigit);
                 $fragment.find('.password-validity .upper-and-lower').toggleClass('valid', hasLower && hasUpper);
                 $fragment.find('.password-validity .length').toggleClass('valid', isLongEnough);
                 $fragment.find('.password-strength').attr('data-strength', strength);
                 $fragment.find('.password-strength-text').text(settings.strength[strength]);
+            }
+
+            $this.on('keyup', function(event) {
+                var password = $this.val();
+                update_dom(password);
             });
+
+            update_dom($this.val());
         });
     };
 }));
