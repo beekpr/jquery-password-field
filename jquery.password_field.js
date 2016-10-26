@@ -224,7 +224,6 @@
                         </ul> \
                         <div class="password-strength-text-wrapper"><span>\
                             <span class="password-strength-text"></span>&nbsp;\
-                            <i class="help ' + settings.helpIconClasses + '" aria-hidden="true"></i>\
                         </span></div>\
                     </div>\
                     <div class="password-validity-header">' + settings.validity['header'] + '</div> \
@@ -267,11 +266,24 @@
                     }
                 }
 
+                function toggleValid($li, showValidation, valid) {
+                  $li.toggleClass('valid', showValidation && valid);
+                  $li.toggleClass('invalid', showValidation && !valid);
+                }
+
+                var validate = password.length > 0;
+                var $passwordValidity = $fragment.find('.password-validity');
+                $passwordValidity.toggleClass('focus', $this.is(':focus'))
+                $passwordValidity.toggleClass('invalid', !valid)
+                $passwordValidity.toggleClass('has-password', password.length > 0)
+                $fragment.find('.password-validity').css('bottom', ($this.outerHeight() + 30) + 'px');
+
                 $fragment.find('.password-validity li').toggleClass(settings.emptyState, password.length == 0);
-                $fragment.find('.password-validity li').toggleClass('invalid', password.length > 0 && !valid);
-                $fragment.find('.password-validity .digits').toggleClass('valid', hasDigit);
-                $fragment.find('.password-validity .upper-and-lower').toggleClass('valid', hasLower && hasUpper);
-                $fragment.find('.password-validity .length').toggleClass('valid', isLongEnough);
+
+                toggleValid($fragment.find('.password-validity .digits'), validate, hasDigit);
+                toggleValid($fragment.find('.password-validity .upper-and-lower'), validate, hasLower && hasUpper);
+                toggleValid($fragment.find('.password-validity .length'), validate, isLongEnough);
+
                 $fragment.find('.password-strength').attr('data-strength', strength);
                 $fragment.find('.password-strength-text').text(settings.strength[strength]);
             }
@@ -279,6 +291,14 @@
             $this.on('keyup', function(event) {
                 var password = $this.val();
                 update_dom(password);
+            });
+
+            $this.on('blur', function(event) {
+              $fragment.find('.password-validity').toggleClass('focus', false)
+            });
+
+            $this.on('focus', function(event) {
+              $fragment.find('.password-validity').toggleClass('focus', true)
             });
 
             update_dom($this.val());
