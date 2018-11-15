@@ -12,6 +12,9 @@
     "url": "https://github.com/beekpr/jquery-password-field/issues"
   },
   "homepage": "https://github.com/beekpr/jquery-password-field#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-pro": "^5.2.0"
+  },
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-bower-task": "^0.4.0",
