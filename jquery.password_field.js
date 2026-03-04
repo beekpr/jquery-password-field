@@ -184,6 +184,7 @@
     $.fn.strengthIndicator = function(options) {
 
         var settings = $.extend(true, {
+            minLength: 8,
             strength: {
                 invalid: 'Invalid',
                 acceptable: 'Acceptable',
@@ -192,13 +193,17 @@
             },
             validity: {
                 header: 'Your password must have',
-                passwordLength: '8 or more characters',
+                passwordLength: null,
                 passwordUpperAndLower: 'Upper & lowercase letters',
                 passwordDigits: 'At least one number'
             },
             emptyState: 'empty',
             helpIconClasses: 'fa fa-question-circle'
         }, options);
+
+        if (!settings.validity.passwordLength) {
+            settings.validity.passwordLength = settings.minLength + ' or more characters';
+        }
 
         function isLowerCase(ch) {
             return ch == ch.toLowerCase() && ch != ch.toUpperCase();
@@ -214,6 +219,7 @@
 
         this.each(function () {
             var $this = $(this);
+            $this.attr('minlength', settings.minLength);
 
             var $fragment = $('<div>\
                     <div class="password-strength"> \
@@ -252,7 +258,7 @@
                     hasLower = hasLower || isLowerCase(ch);
                     hasUpper = hasUpper || isUpperCase(ch);
                 }
-                var isLongEnough = password.length >= 8;
+                var isLongEnough = password.length >= settings.minLength;
 
                 var valid = hasDigit && hasLower && hasUpper && isLongEnough;
 
