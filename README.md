@@ -2,6 +2,13 @@
 
 jQuery plugin that adds password visibility toggle and strength indicator to password fields.
 
+## Used in
+
+- [Monolith](https://github.com/beekpr/beekeeper/blob/c6348c199ea72eff8570125587ec4682c3262507/tickly/beekeeper/frontend_v2/public/bower.json#L8)
+- [dashboard-web](https://github.com/beekpr/dashboard-web/blob/1311e45e50ecdd0b99fbccab5ba5c07a418cef20/package.json#L98)
+- [app-web](https://github.com/beekpr/app-web/blob/4c6036ef4d27eab2bcc1f9fe729ac39875b31f8b/package.json#L76)
+
+
 ## Features
 
 - **Visibility toggle** - show/hide password via an icon button
@@ -73,6 +80,7 @@ npx grunt
 ```
 
 Outputs `jquery.password_field.min.js` and its source map.
+
 
 ## License
 
