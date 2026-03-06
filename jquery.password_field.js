@@ -183,8 +183,10 @@
      */
     $.fn.strengthIndicator = function(options) {
 
+        var minLength = (options && options.minLength) || 8;
         var settings = $.extend(true, {
-            minLength: 8,
+            minLength: minLength,
+            mustHaveSpecialChar: false,
             strength: {
                 invalid: 'Invalid',
                 acceptable: 'Acceptable',
@@ -193,17 +195,14 @@
             },
             validity: {
                 header: 'Your password must have',
-                passwordLength: null,
+                passwordLength: minLength + ' or more characters',
                 passwordUpperAndLower: 'Upper & lowercase letters',
-                passwordDigits: 'At least one number'
+                passwordDigits: 'At least one number',
+                passwordSpecialChar: 'At least one special character'
             },
             emptyState: 'empty',
             helpIconClasses: 'fa fa-question-circle'
         }, options);
-
-        if (!settings.validity.passwordLength) {
-            settings.validity.passwordLength = settings.minLength + ' or more characters';
-        }
 
         function isLowerCase(ch) {
             return ch == ch.toLowerCase() && ch != ch.toUpperCase();
@@ -215,6 +214,10 @@
 
         function isDigit(ch) {
             return /\d/.test(ch);
+        }
+
+        function isSpecialChar(ch) {
+            return /[^a-zA-Z0-9]/.test(ch);
         }
 
         this.each(function () {
@@ -237,6 +240,7 @@
                         <li class="length">' + settings.validity['passwordLength'] + '</li> \
                         <li class="upper-and-lower">' + settings.validity['passwordUpperAndLower'] + '</li> \
                         <li class="digits">' + settings.validity['passwordDigits'] + '</li> \
+                        ' + (settings.mustHaveSpecialChar ? '<li class="special-char">' + settings.validity['passwordSpecialChar'] + '</li>' : '') + ' \
                     </ul>\
                 </div>');
 
@@ -252,15 +256,17 @@
                 var hasDigit = false;
                 var hasLower = false;
                 var hasUpper = false;
+                var hasSpecialChar = false;
                 for (var i = 0; i < password.length; i++) {
                     var ch = password.charAt(i);
                     hasDigit = hasDigit || isDigit(ch);
                     hasLower = hasLower || isLowerCase(ch);
                     hasUpper = hasUpper || isUpperCase(ch);
+                    hasSpecialChar = hasSpecialChar || isSpecialChar(ch);
                 }
                 var isLongEnough = password.length >= settings.minLength;
 
-                var valid = hasDigit && hasLower && hasUpper && isLongEnough;
+                var valid = hasDigit && hasLower && hasUpper && isLongEnough && (!settings.mustHaveSpecialChar || hasSpecialChar);
 
                 var strength = 'na';
                 if (password) {
@@ -289,6 +295,9 @@
                 toggleValid($fragment.find('.password-validity .digits'), validate, hasDigit);
                 toggleValid($fragment.find('.password-validity .upper-and-lower'), validate, hasLower && hasUpper);
                 toggleValid($fragment.find('.password-validity .length'), validate, isLongEnough);
+                if (settings.mustHaveSpecialChar) {
+                    toggleValid($fragment.find('.password-validity .special-char'), validate, hasSpecialChar);
+                }
 
                 $fragment.find('.password-strength').attr('data-strength', strength);
                 $fragment.find('.password-strength-text').text(settings.strength[strength]);
