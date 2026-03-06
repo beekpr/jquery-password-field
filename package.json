@@ -12,9 +12,19 @@
     "url": "https://github.com/beekpr/jquery-password-field/issues"
   },
   "homepage": "https://github.com/beekpr/jquery-password-field#readme",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-bower-task": "^0.4.0",
-    "grunt-contrib-uglify": "^1.0.1"
+    "grunt-contrib-uglify": "^1.0.1",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "jquery": "^4.0.0",
+    "zxcvbn": "^4.4.2"
   }
 }
