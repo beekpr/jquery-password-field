@@ -217,7 +217,8 @@
         }
 
         function isSpecialChar(ch) {
-            return /[^a-zA-Z0-9]/.test(ch);
+            // Matches the backend check: https://github.com/beekpr/beekeeper/blob/c6348c199ea72eff8570125587ec4682c3262507/common/beekeeper/common/resources/user.py#L2297
+            return /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(ch);
         }
 
         this.each(function () {
