@@ -1,6 +1,6 @@
 {
   "name": "jquery-password-field",
-  "homepage": "https://github.com/beekpr/jquery-password-field",
+  "homepage": "https://github.com/lumapps/jquery-password-field",
   "description": "JQuery Plugin to customize password field",
   "main": [
     "jquery.password_field.js",
